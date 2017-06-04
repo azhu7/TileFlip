@@ -15,9 +15,8 @@ public class Player : MovingObject
 
     private void Update()
     {
-        if (isMoving)
-            return;
-        isMoving = true;
+        if (!GameManager.instance.playersTurn) return;
+
         int horizontal = (int)(Input.GetAxisRaw("Horizontal"));
         int vertical = (int)(Input.GetAxisRaw("Vertical"));
         if (horizontal != 0)
@@ -28,9 +27,8 @@ public class Player : MovingObject
         if (horizontal != 0 || vertical != 0)
         {
             Move(horizontal, vertical);
+            GameManager.instance.playersTurn = false;
         }
-
-        isMoving = false;
     }
     
     private void Restart()

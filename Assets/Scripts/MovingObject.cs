@@ -21,7 +21,7 @@ public abstract class MovingObject : MonoBehaviour
     protected void Move(int xDir, int yDir)
     {
         Vector2 start = transform.position;
-        Vector2 end = start + new Vector2(0.5f*xDir, 0.5f*yDir);
+        Vector2 end = start + new Vector2(xDir, yDir);
         circleCollider.enabled = false;
         RaycastHit2D hit = Physics2D.Linecast(start, end, blockingLayer);
         circleCollider.enabled = true;

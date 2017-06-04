@@ -7,13 +7,16 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public float levelStartDelay = 2f;
+    public float turnDelay = 1f;
     public static GameManager instance = null;
+    [HideInInspector] public bool playersTurn = true;
 
     private Text levelText;
     private GameObject levelImage;
     private BoardManager boardScript;
     private int level = 1;
     private bool doingSetup = true;  // Player can't move when this is true
+    private bool waiting;
 
     void Awake()
     {
@@ -35,6 +38,13 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    public void GameOver()
+    {
+        levelText.text = "You got to level " + level + ".";
+        levelImage.SetActive(true);
+        enabled = false;
+    }
+
     //This is called each time a scene is loaded.
     static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
@@ -53,16 +63,25 @@ public class GameManager : MonoBehaviour
         boardScript.SetupScene(level);
     }
 
-    void HideLevelImage()
+    private void HideLevelImage()
     {
         levelImage.SetActive(false);
         doingSetup = false;
     }
 
-    public void GameOver()
+    private void Update()
     {
-        levelText.text = "You got to level " + level + ".";
-        levelImage.SetActive(true);
-        enabled = false;
+        if (playersTurn || waiting)
+            return;
+        StartCoroutine(TurnDelay());
+    }
+
+    private IEnumerator TurnDelay()
+    {
+        waiting = true;
+        yield return new WaitForSeconds(turnDelay);
+
+        playersTurn = true;
+        waiting = false;
     }
 }
