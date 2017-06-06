@@ -7,15 +7,14 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public float levelStartDelay = 2f;
-    public float turnDelay = 1f;
+    public float turnDelay = 0.5f;
     public static GameManager instance = null;
-    [HideInInspector] public bool playersTurn = true;
+    [HideInInspector] public bool playersTurn = false;
 
     private Text levelText;
     private GameObject levelImage;
     private BoardManager boardScript;
     private int level = 1;
-    private bool doingSetup = true;  // Player can't move when this is true
     private bool waiting;
 
     void Awake()
@@ -27,6 +26,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         boardScript = GetComponent<BoardManager>();
         InitGame();
+        playersTurn = true;
     }
 
     //this is called only once, and the paramter tell it to be called only after the scene was loaded
@@ -54,7 +54,6 @@ public class GameManager : MonoBehaviour
     
     private void InitGame()
     {
-        doingSetup = true;
         levelImage = GameObject.Find("LevelImage");
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
         levelText.text = "Level " + level;
@@ -66,7 +65,6 @@ public class GameManager : MonoBehaviour
     private void HideLevelImage()
     {
         levelImage.SetActive(false);
-        doingSetup = false;
     }
 
     private void Update()
